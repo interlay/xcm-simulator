@@ -357,7 +357,7 @@ macro_rules! decl_test_network {
 								!$crate::DMP_DONE.with(|b| b.borrow_mut().contains(&(to_para_id, m.0, m.1.clone())))
 							}).collect::<Vec<(RelayChainBlockNumber, Vec<u8>)>>();
 							if msgs.len() != 0 {
-								<$parachain>::handle_dmp_messages(msgs.clone().into_iter(), $crate::Weight::max_value());
+								<$parachain>::handle_dmp_messages(msgs.clone().into_iter(), $crate::Weight::MAX);
 								for m in msgs {
 									$crate::DMP_DONE.with(|b| b.borrow_mut().push_back((to_para_id, m.0, m.1)));
 								}
@@ -378,7 +378,7 @@ macro_rules! decl_test_network {
 				match to_para_id {
 					$(
 						$para_id => {
-							<$parachain>::handle_xcmp_messages(iter, $crate::Weight::max_value());
+							<$parachain>::handle_xcmp_messages(iter, $crate::Weight::MAX);
 						},
 					)*
 					_ => unreachable!(),
@@ -392,7 +392,7 @@ macro_rules! decl_test_network {
 				let _ =  <$relay_chain>::process_upward_message(
 					from_para_id.into(),
 					&msg[..],
-					$crate::Weight::max_value(),
+					$crate::Weight::MAX,
 				);
 			}
 		}
